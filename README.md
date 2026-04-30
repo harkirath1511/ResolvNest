@@ -1,2 +1,2 @@
-# ResolvNest-
+# ResolvNest
 dbms project
