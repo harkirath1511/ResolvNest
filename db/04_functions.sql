@@ -202,3 +202,10 @@ BEGIN
   -- status_log insert is handled automatically by trg_complaint_after_status_change
 END;
 $$;
+
+-- PostgREST (Supabase) only exposes RPCs that API roles may execute. Without these
+-- grants, .rpc() can fail with "Could not find the function ... in the schema cache".
+GRANT EXECUTE ON FUNCTION public.sp_assign_complaint(integer, integer)
+  TO anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.sp_update_status(integer, complaint_status, text)
+  TO anon, authenticated, service_role;
