@@ -9,8 +9,8 @@
 -- Shows BEGIN / COMMIT: assign complaint 13 to staff 1 AND add a note atomically.
 BEGIN;
 
-  -- Step 1: Assign the complaint (calls our procedure)
-  CALL sp_assign_complaint(13, 1);
+  -- Step 1: Assign the complaint (calls our function)
+  PERFORM sp_assign_complaint(13, 1);
 
   -- Step 2: Add an admin note directly (same transaction)
   UPDATE status_log
@@ -36,7 +36,7 @@ WHERE  complaint_id = 13;
 DO $$
 BEGIN
   BEGIN  -- savepoint block
-    CALL sp_assign_complaint(1, 2);  -- complaint 1 is Resolved → should raise
+    PERFORM sp_assign_complaint(1, 2);  -- complaint 1 is Resolved → should raise
   EXCEPTION
     WHEN OTHERS THEN
       RAISE NOTICE 'ROLLBACK triggered: %', SQLERRM;
@@ -52,7 +52,7 @@ WHERE  complaint_id = 1;
 
 -- ── DEMO C: Status update with note ─────────────────────────
 BEGIN;
-  CALL sp_update_status(7, 'Resolved', 'Drain unblocked. Checked and cleared.');
+  PERFORM sp_update_status(7, 'Resolved', 'Drain unblocked. Checked and cleared.');
 COMMIT;
 
 SELECT complaint_id, current_status, resolved_at

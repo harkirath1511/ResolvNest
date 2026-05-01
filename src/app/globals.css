@@ -1,11 +1,90 @@
 @import "tailwindcss";
 
+/* ── Design tokens ─────────────────────────────────────── */
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --bg:        #F7F3ED;
+  --surface:   #FFFFFF;
+  --border:    #111111;
+  --shadow:    4px 4px 0px #111111;
+  --shadow-lg: 6px 6px 0px #111111;
+  --shadow-xl: 8px 8px 0px #111111;
+
+  --text:      #111111;
+  --muted:     #666666;
+
+  --yellow:    #FFD23F;
+  --pink:      #FF2D78;
+  --teal:      #00C9B1;
+  --purple:    #7C3AED;
+  --blue:      #2563EB;
+  --orange:    #FF6B35;
 }
 
+/* ── Base ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* ── Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 0; }
+
+/* ── Neo-brutalist card ─────────────────────────────────── */
+.nb-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow);
+  border-radius: 12px;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.nb-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translate(-1px, -1px);
+}
+
+/* ── Floating shapes ────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-12px) rotate(4deg); }
+  66%       { transform: translateY(-6px) rotate(-3deg); }
+}
+@keyframes floatAlt {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-16px) rotate(-5deg); }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes pulse-ring {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.05); opacity: 0.8; }
+}
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.float-1 { animation: float 5s ease-in-out infinite; }
+.float-2 { animation: floatAlt 7s ease-in-out infinite; }
+.float-3 { animation: float 6s ease-in-out infinite 1s; }
+.spin-slow { animation: spin-slow 12s linear infinite; }
+.pulse-ring { animation: pulse-ring 3s ease-in-out infinite; }
+
+.animate-slide-up { animation: slide-up 0.5s ease-out both; }
+.animate-slide-up-1 { animation: slide-up 0.5s ease-out 0.1s both; }
+.animate-slide-up-2 { animation: slide-up 0.5s ease-out 0.2s both; }
+.animate-slide-up-3 { animation: slide-up 0.5s ease-out 0.3s both; }
+.animate-slide-in  { animation: slide-in-left 0.4s ease-out both; }

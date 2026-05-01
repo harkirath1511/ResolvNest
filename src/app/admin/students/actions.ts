@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { requireRole } from '@/lib/session';
 import { createStudent, deleteStudent } from '@/lib/db/students';
 import { createStudentSchema } from '@/lib/validation';
@@ -28,8 +29,8 @@ export async function deleteStudentAction(formData: FormData) {
   const id = Number(formData.get('student_id'));
   try {
     await deleteStudent(id);
-    return { error: null };
-  } catch (err) {
-    return { error: err instanceof Error ? err.message : 'Failed to delete student.' };
+    revalidatePath('/admin/students');
+  } catch {
+    // silently ignore — UI will show stale data, user can refresh
   }
 }

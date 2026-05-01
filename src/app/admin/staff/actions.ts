@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { requireRole } from '@/lib/session';
 import { createStaff, deleteStaff } from '@/lib/db/staff';
 import { createStaffSchema } from '@/lib/validation';
@@ -27,8 +28,8 @@ export async function deleteStaffAction(formData: FormData) {
   const id = Number(formData.get('staff_id'));
   try {
     await deleteStaff(id);
-    return { error: null };
-  } catch (err) {
-    return { error: err instanceof Error ? err.message : 'Failed to delete staff.' };
+    revalidatePath('/admin/staff');
+  } catch {
+    // silently ignore
   }
 }

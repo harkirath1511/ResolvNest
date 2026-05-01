@@ -103,17 +103,18 @@ $$;
 -- ── sp_assign_complaint ─────────────────────────────────────
 -- Assigns a complaint to a staff member.
 -- Raises an exception if the complaint is already resolved.
--- Wraps the update in a BEGIN/COMMIT block (procedure-level transaction).
-CREATE OR REPLACE PROCEDURE sp_assign_complaint(
+-- Returns void so it can be called via Supabase .rpc().
+CREATE OR REPLACE FUNCTION sp_assign_complaint(
   p_complaint_id INT,
   p_staff_id     INT
 )
+RETURNS void
 LANGUAGE plpgsql
+SECURITY DEFINER
 AS $$
 DECLARE
   v_status complaint_status;
 BEGIN
-  -- Lock the row for update
   SELECT current_status INTO v_status
   FROM   complaint
   WHERE  complaint_id = p_complaint_id
@@ -136,19 +137,22 @@ BEGIN
       current_status = 'Assigned'
   WHERE complaint_id = p_complaint_id;
 
-  -- status_log insert is handled automatically by trg_complaint_after_status_change
+  -- status_log row inserted automatically by trg_complaint_after_status_change
 END;
 $$;
 
 -- ── sp_update_status ────────────────────────────────────────
 -- Updates the status of a complaint with optional note.
 -- Enforces legal status transitions and handles resolved_at timestamp.
-CREATE OR REPLACE PROCEDURE sp_update_status(
+-- Returns void so it can be called via Supabase .rpc().
+CREATE OR REPLACE FUNCTION sp_update_status(
   p_complaint_id INT,
   p_new_status   complaint_status,
   p_note         TEXT DEFAULT NULL
 )
+RETURNS void
 LANGUAGE plpgsql
+SECURITY DEFINER
 AS $$
 DECLARE
   v_current complaint_status;
