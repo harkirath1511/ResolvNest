@@ -104,6 +104,9 @@ $$;
 -- Assigns a complaint to a staff member.
 -- Raises an exception if the complaint is already resolved.
 -- Returns void so it can be called via Supabase .rpc().
+-- If this name was previously created as a PROCEDURE, DROP it first: Postgres
+-- cannot change routine kind with CREATE OR REPLACE FUNCTION.
+DROP PROCEDURE IF EXISTS public.sp_assign_complaint(integer, integer);
 CREATE OR REPLACE FUNCTION sp_assign_complaint(
   p_complaint_id INT,
   p_staff_id     INT
@@ -145,6 +148,7 @@ $$;
 -- Updates the status of a complaint with optional note.
 -- Enforces legal status transitions and handles resolved_at timestamp.
 -- Returns void so it can be called via Supabase .rpc().
+DROP PROCEDURE IF EXISTS public.sp_update_status(integer, complaint_status, text);
 CREATE OR REPLACE FUNCTION sp_update_status(
   p_complaint_id INT,
   p_new_status   complaint_status,
