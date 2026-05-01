@@ -3,21 +3,26 @@ import type { HTMLAttributes } from 'react';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   padding?: 'sm' | 'md' | 'lg' | 'none';
+  accent?: string;
 }
 
-export function Card({ padding = 'md', className, children, ...props }: CardProps) {
+export function Card({ padding = 'md', accent, className, style, children, ...props }: CardProps) {
   return (
     <div
       className={clsx(
-        'bg-white rounded-xl border border-slate-200 shadow-sm',
+        'nb-card',
         {
-          'p-3': padding === 'sm',
-          'p-5': padding === 'md',
-          'p-7': padding === 'lg',
+          'p-4': padding === 'sm',
+          'p-6': padding === 'md',
+          'p-8': padding === 'lg',
           '': padding === 'none',
         },
         className
       )}
+      style={{
+        borderTop: accent ? `4px solid ${accent}` : undefined,
+        ...style,
+      }}
       {...props}
     >
       {children}
@@ -35,7 +40,11 @@ export function CardHeader({ className, children, ...props }: HTMLAttributes<HTM
 
 export function CardTitle({ className, children, ...props }: HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <h3 className={clsx('text-base font-semibold text-slate-900', className)} {...props}>
+    <h3
+      className={clsx('text-base font-black', className)}
+      style={{ fontFamily: 'var(--font-syne)' }}
+      {...props}
+    >
       {children}
     </h3>
   );

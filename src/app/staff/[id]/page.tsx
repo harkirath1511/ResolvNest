@@ -28,65 +28,57 @@ export default async function StaffComplaintDetailPage({
 
   const logs = await getStatusLog(complaint.complaint_id);
 
+  const details = [
+    { label: 'Category', value: complaint.category_name },
+    { label: 'Student', value: complaint.student_name },
+    { label: 'Location', value: `${complaint.hostel_name}, Block ${complaint.block}, Rm ${complaint.room_no}` },
+    { label: 'Submitted', value: formatDate(complaint.complaint_date) },
+    ...(complaint.resolved_at ? [{ label: 'Resolved', value: formatDate(complaint.resolved_at) }] : []),
+  ];
+
   return (
     <div className="space-y-6 max-w-2xl">
       <Link
         href="/staff"
-        className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors"
+        className="inline-flex items-center gap-2 text-sm font-black px-3 py-1.5 rounded-full transition-all hover:-translate-x-1"
+        style={{ border: '2px solid #111', background: '#fff', boxShadow: '2px 2px 0 #111', fontFamily: 'var(--font-syne)' }}
       >
-        <ArrowLeft size={14} /> Back to dashboard
+        <ArrowLeft size={14} strokeWidth={2.5} /> Back
       </Link>
 
-      <div className="flex items-start justify-between gap-4">
-        <h1 className="text-2xl font-bold text-slate-900">
-          Complaint #{complaint.complaint_id}
-        </h1>
+      <div className="flex items-start justify-between gap-4 animate-slide-up">
+        <div>
+          <p className="text-xs font-black uppercase tracking-widest mb-0.5" style={{ color: 'var(--muted)', fontFamily: 'var(--font-syne)' }}>
+            Complaint
+          </p>
+          <h1 className="text-2xl md:text-3xl font-black" style={{ fontFamily: 'var(--font-syne)' }}>
+            #{complaint.complaint_id}
+          </h1>
+        </div>
         <StatusBadge status={complaint.current_status} />
       </div>
 
-      <Card className="space-y-4">
-        <div>
-          <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">Description</p>
-          <p className="text-sm text-slate-800">{complaint.description}</p>
-        </div>
-        <div className="grid grid-cols-2 gap-4 pt-2 border-t border-slate-100">
-          <div>
-            <p className="text-xs text-slate-500">Category</p>
-            <p className="text-sm font-medium text-slate-800">{complaint.category_name}</p>
-          </div>
-          <div>
-            <p className="text-xs text-slate-500">Student</p>
-            <p className="text-sm font-medium text-slate-800">{complaint.student_name}</p>
-          </div>
-          <div>
-            <p className="text-xs text-slate-500">Location</p>
-            <p className="text-sm font-medium text-slate-800">
-              {complaint.hostel_name}, Block {complaint.block}, Room {complaint.room_no}
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-slate-500">Submitted</p>
-            <p className="text-sm font-medium text-slate-800">{formatDate(complaint.complaint_date)}</p>
-          </div>
-          {complaint.resolved_at && (
-            <div>
-              <p className="text-xs text-slate-500">Resolved</p>
-              <p className="text-sm font-medium text-emerald-700">{formatDate(complaint.resolved_at)}</p>
+      <Card className="animate-slide-up-1" accent="var(--yellow)">
+        <p className="text-xs font-black uppercase tracking-widest mb-1.5" style={{ color: 'var(--muted)', fontFamily: 'var(--font-syne)' }}>Description</p>
+        <p className="text-sm font-medium mb-4">{complaint.description}</p>
+        <div className="h-px w-full" style={{ background: '#e5e7eb' }} />
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          {details.map(({ label, value }) => (
+            <div key={label}>
+              <p className="text-xs font-black uppercase tracking-wide" style={{ color: 'var(--muted)', fontFamily: 'var(--font-syne)' }}>{label}</p>
+              <p className="text-sm font-semibold mt-0.5">{value}</p>
             </div>
-          )}
+          ))}
         </div>
       </Card>
 
-      <Card>
-        <h2 className="text-base font-semibold text-slate-900 mb-5">Update Status</h2>
-        <StatusUpdateForm
-          complaintId={complaint.complaint_id}
-          currentStatus={complaint.current_status}
-        />
+      <Card className="animate-slide-up-2" accent="var(--pink)">
+        <h2 className="text-base font-black mb-5" style={{ fontFamily: 'var(--font-syne)' }}>Update Status</h2>
+        <StatusUpdateForm complaintId={complaint.complaint_id} currentStatus={complaint.current_status} />
       </Card>
 
-      <Card>
-        <h2 className="text-base font-semibold text-slate-900 mb-5">Status History</h2>
+      <Card className="animate-slide-up-3" accent="var(--teal)">
+        <h2 className="text-base font-black mb-5" style={{ fontFamily: 'var(--font-syne)' }}>Status History</h2>
         <StatusTimeline logs={logs} />
       </Card>
     </div>

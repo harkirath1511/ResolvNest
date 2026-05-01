@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { requireRole } from '@/lib/session';
 import { createCategory, deleteCategory } from '@/lib/db/categories';
 import { createCategorySchema } from '@/lib/validation';
@@ -25,8 +26,8 @@ export async function deleteCategoryAction(formData: FormData) {
   const id = Number(formData.get('category_id'));
   try {
     await deleteCategory(id);
-    return { error: null };
-  } catch (err) {
-    return { error: err instanceof Error ? err.message : 'Failed to delete category.' };
+    revalidatePath('/admin/categories');
+  } catch {
+    // silently ignore
   }
 }

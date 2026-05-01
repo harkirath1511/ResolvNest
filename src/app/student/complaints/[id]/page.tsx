@@ -31,55 +31,48 @@ export default async function ComplaintDetailPage({
     <div className="space-y-6 max-w-2xl">
       <Link
         href="/student/complaints"
-        className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors"
+        className="inline-flex items-center gap-2 text-sm font-bold px-3 py-1.5 rounded-full transition-all hover:-translate-x-1"
+        style={{ border: '2px solid #111', background: 'var(--surface)', boxShadow: '2px 2px 0 #111' }}
       >
-        <ArrowLeft size={14} /> Back to complaints
+        <ArrowLeft size={14} /> Back
       </Link>
 
-      <div className="flex items-start justify-between gap-4">
-        <h1 className="text-2xl font-bold text-slate-900">
+      <div className="flex items-start justify-between gap-4 animate-slide-up">
+        <h1 className="text-2xl font-black" style={{ fontFamily: 'var(--font-syne)' }}>
           Complaint #{complaint.complaint_id}
         </h1>
         <StatusBadge status={complaint.current_status} />
       </div>
 
-      <Card className="space-y-4">
+      <Card className="space-y-4 animate-slide-up-1">
         <div>
-          <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">Description</p>
-          <p className="text-sm text-slate-800">{complaint.description}</p>
+          <p className="text-xs font-black uppercase tracking-widest mb-1.5" style={{ color: 'var(--muted)', fontFamily: 'var(--font-syne)' }}>Description</p>
+          <p className="text-sm font-medium">{complaint.description}</p>
         </div>
-        <div className="grid grid-cols-2 gap-4 pt-2 border-t border-slate-100">
-          <div>
-            <p className="text-xs text-slate-500">Category</p>
-            <p className="text-sm font-medium text-slate-800">{complaint.category_name}</p>
-          </div>
-          <div>
-            <p className="text-xs text-slate-500">Submitted</p>
-            <p className="text-sm font-medium text-slate-800">{formatDate(complaint.complaint_date)}</p>
-          </div>
-          <div>
-            <p className="text-xs text-slate-500">Hostel</p>
-            <p className="text-sm font-medium text-slate-800">
-              {complaint.hostel_name}, Block {complaint.block}, Room {complaint.room_no}
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-slate-500">Assigned Staff</p>
-            <p className="text-sm font-medium text-slate-800">
-              {complaint.staff_name ?? 'Not yet assigned'}
-            </p>
-          </div>
-          {complaint.resolved_at && (
-            <div>
-              <p className="text-xs text-slate-500">Resolved At</p>
-              <p className="text-sm font-medium text-emerald-700">{formatDate(complaint.resolved_at)}</p>
+        <div
+          className="h-px w-full"
+          style={{ background: '#e5e7eb' }}
+        />
+        <div className="grid grid-cols-2 gap-4">
+          {[
+            { label: 'Category', value: complaint.category_name },
+            { label: 'Submitted', value: formatDate(complaint.complaint_date) },
+            { label: 'Location', value: `${complaint.hostel_name}, Block ${complaint.block}, Rm ${complaint.room_no}` },
+            { label: 'Assigned Staff', value: complaint.staff_name ?? 'Not yet assigned' },
+            ...(complaint.resolved_at
+              ? [{ label: 'Resolved At', value: formatDate(complaint.resolved_at) }]
+              : []),
+          ].map(({ label, value }) => (
+            <div key={label}>
+              <p className="text-xs font-black uppercase tracking-wide" style={{ color: 'var(--muted)', fontFamily: 'var(--font-syne)' }}>{label}</p>
+              <p className="text-sm font-semibold mt-0.5">{value}</p>
             </div>
-          )}
+          ))}
         </div>
       </Card>
 
-      <Card>
-        <h2 className="text-base font-semibold text-slate-900 mb-5">Status History</h2>
+      <Card className="animate-slide-up-2">
+        <h2 className="text-base font-black mb-5" style={{ fontFamily: 'var(--font-syne)' }}>Status History</h2>
         <StatusTimeline logs={logs} />
       </Card>
     </div>

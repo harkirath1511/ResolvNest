@@ -8,23 +8,24 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   options: { value: string | number; label: string }[];
 }
 
-export function Select({ label, error, placeholder, options, className, id, ...props }: SelectProps) {
+export function Select({ label, error, placeholder, options, className, id, style, ...props }: SelectProps) {
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label htmlFor={id} className="text-sm font-medium text-slate-700">
+        <label htmlFor={id} className="text-sm font-bold" style={{ fontFamily: 'var(--font-syne)' }}>
           {label}
         </label>
       )}
       <select
         id={id}
-        className={clsx(
-          'rounded-lg border px-3 py-2 text-sm text-slate-900 bg-white',
-          'focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500',
-          'disabled:bg-slate-50 disabled:text-slate-500',
-          error ? 'border-red-400' : 'border-slate-300',
-          className
-        )}
+        className={clsx('rounded-xl px-4 py-2.5 text-sm font-medium bg-white w-full outline-none appearance-none cursor-pointer', className)}
+        style={{
+          border: '2px solid #111',
+          boxShadow: '3px 3px 0 #111',
+          borderColor: error ? 'var(--pink)' : '#111',
+          fontFamily: 'var(--font-dm-sans)',
+          ...style,
+        }}
         {...props}
       >
         {placeholder && <option value="">{placeholder}</option>}
@@ -34,7 +35,7 @@ export function Select({ label, error, placeholder, options, className, id, ...p
           </option>
         ))}
       </select>
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs font-semibold" style={{ color: 'var(--pink)' }}>{error}</p>}
     </div>
   );
 }

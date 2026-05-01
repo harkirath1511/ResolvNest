@@ -1,8 +1,9 @@
 import { requireRole } from '@/lib/session';
 import { listCategories } from '@/lib/db/categories';
-import { Card } from '@/components/ui/Card';
 import { Table, Thead, Th, Tbody, Tr, Td } from '@/components/ui/Table';
+import { EmptyState } from '@/components/EmptyState';
 import { CategoryCrudPanel } from './CategoryCrudPanel';
+import { Tag } from 'lucide-react';
 
 export default async function AdminCategoriesPage() {
   await requireRole('admin');
@@ -10,31 +11,37 @@ export default async function AdminCategoriesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Complaint Categories</h1>
-        <p className="text-slate-500 mt-1">{categories.length} categories</p>
+      <div className="animate-slide-up">
+        <p className="text-sm font-black uppercase tracking-widest mb-1" style={{ color: 'var(--muted)', fontFamily: 'var(--font-syne)' }}>Admin Panel</p>
+        <h1 className="text-3xl md:text-4xl font-black" style={{ fontFamily: 'var(--font-syne)' }}>Complaint Categories</h1>
+        <p className="text-sm font-medium mt-1" style={{ color: 'var(--muted)' }}>
+          {categories.length} {categories.length === 1 ? 'category' : 'categories'} available when raising complaints.
+        </p>
       </div>
 
-      <CategoryCrudPanel />
+      <div className="animate-slide-up-1">
+        <CategoryCrudPanel />
+      </div>
 
-      <Card padding="none">
-        <Table>
-          <Thead>
-            <tr>
-              <Th>#</Th>
-              <Th>Category Name</Th>
-            </tr>
-          </Thead>
-          <Tbody>
-            {categories.map((c) => (
-              <Tr key={c.category_id}>
-                <Td className="text-slate-400 text-xs">{c.category_id}</Td>
-                <Td className="font-medium text-sm">{c.category_name}</Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </Card>
+      {categories.length === 0 ? (
+        <EmptyState Icon={Tag} title="No categories yet" description="Add complaint categories using the form above." accent="var(--yellow)" />
+      ) : (
+        <div className="animate-slide-up-2 nb-card overflow-hidden p-0">
+          <Table>
+            <Thead>
+              <tr><Th>#</Th><Th>Category Name</Th></tr>
+            </Thead>
+            <Tbody>
+              {categories.map((c) => (
+                <Tr key={c.category_id}>
+                  <Td className="text-xs font-black" style={{ color: 'var(--muted)' }}>{c.category_id}</Td>
+                  <Td className="font-bold text-sm">{c.category_name}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </div>
+      )}
     </div>
   );
 }

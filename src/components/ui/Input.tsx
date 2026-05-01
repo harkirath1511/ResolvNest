@@ -6,26 +6,29 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
-export function Input({ label, error, className, id, ...props }: InputProps) {
+const baseInput = 'rounded-xl px-4 py-2.5 text-sm font-medium bg-white w-full outline-none transition-all';
+const baseInputStyle: React.CSSProperties = {
+  border: '2px solid #111',
+  boxShadow: '3px 3px 0 #111',
+  fontFamily: 'var(--font-dm-sans)',
+};
+const focusStyle = 'focus:ring-0';
+
+export function Input({ label, error, className, id, style, ...props }: InputProps) {
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label htmlFor={id} className="text-sm font-medium text-slate-700">
+        <label htmlFor={id} className="text-sm font-bold" style={{ fontFamily: 'var(--font-syne)' }}>
           {label}
         </label>
       )}
       <input
         id={id}
-        className={clsx(
-          'rounded-lg border px-3 py-2 text-sm text-slate-900 placeholder-slate-400',
-          'focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500',
-          'disabled:bg-slate-50 disabled:text-slate-500',
-          error ? 'border-red-400' : 'border-slate-300',
-          className
-        )}
+        className={clsx(baseInput, focusStyle, className)}
+        style={{ ...baseInputStyle, borderColor: error ? 'var(--pink)' : '#111', ...style }}
         {...props}
       />
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs font-semibold" style={{ color: 'var(--pink)' }}>{error}</p>}
     </div>
   );
 }
@@ -35,26 +38,22 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   error?: string;
 }
 
-export function Textarea({ label, error, className, id, ...props }: TextareaProps) {
+export function Textarea({ label, error, className, id, style, ...props }: TextareaProps) {
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label htmlFor={id} className="text-sm font-medium text-slate-700">
+        <label htmlFor={id} className="text-sm font-bold" style={{ fontFamily: 'var(--font-syne)' }}>
           {label}
         </label>
       )}
       <textarea
         id={id}
-        className={clsx(
-          'rounded-lg border px-3 py-2 text-sm text-slate-900 placeholder-slate-400 resize-none',
-          'focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500',
-          error ? 'border-red-400' : 'border-slate-300',
-          className
-        )}
+        className={clsx(baseInput, focusStyle, 'resize-none', className)}
+        style={{ ...baseInputStyle, borderColor: error ? 'var(--pink)' : '#111', ...style }}
         rows={4}
         {...props}
       />
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs font-semibold" style={{ color: 'var(--pink)' }}>{error}</p>}
     </div>
   );
 }

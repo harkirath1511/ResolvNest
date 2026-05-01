@@ -4,10 +4,7 @@ import type { HTMLAttributes, ThHTMLAttributes, TdHTMLAttributes } from 'react';
 export function Table({ className, children, ...props }: HTMLAttributes<HTMLTableElement>) {
   return (
     <div className="overflow-x-auto">
-      <table
-        className={clsx('w-full text-sm text-left text-slate-700', className)}
-        {...props}
-      >
+      <table className={clsx('w-full text-sm', className)} {...props}>
         {children}
       </table>
     </div>
@@ -16,7 +13,11 @@ export function Table({ className, children, ...props }: HTMLAttributes<HTMLTabl
 
 export function Thead({ className, children, ...props }: HTMLAttributes<HTMLTableSectionElement>) {
   return (
-    <thead className={clsx('bg-slate-50 text-xs text-slate-500 uppercase tracking-wide', className)} {...props}>
+    <thead
+      className={clsx(className)}
+      style={{ borderBottom: '2px solid #111', background: 'var(--bg)' }}
+      {...props}
+    >
       {children}
     </thead>
   );
@@ -24,7 +25,11 @@ export function Thead({ className, children, ...props }: HTMLAttributes<HTMLTabl
 
 export function Th({ className, children, ...props }: ThHTMLAttributes<HTMLTableCellElement>) {
   return (
-    <th className={clsx('px-4 py-3 font-medium', className)} {...props}>
+    <th
+      className={clsx('px-4 py-3 text-left text-xs font-black uppercase tracking-widest', className)}
+      style={{ fontFamily: 'var(--font-syne)', color: '#111' }}
+      {...props}
+    >
       {children}
     </th>
   );
@@ -32,10 +37,7 @@ export function Th({ className, children, ...props }: ThHTMLAttributes<HTMLTable
 
 export function Tbody({ className, children, ...props }: HTMLAttributes<HTMLTableSectionElement>) {
   return (
-    <tbody
-      className={clsx('divide-y divide-slate-100', className)}
-      {...props}
-    >
+    <tbody className={clsx('divide-y', className)} style={{ borderColor: '#e5e7eb' }} {...props}>
       {children}
     </tbody>
   );
@@ -43,7 +45,10 @@ export function Tbody({ className, children, ...props }: HTMLAttributes<HTMLTabl
 
 export function Tr({ className, children, ...props }: HTMLAttributes<HTMLTableRowElement>) {
   return (
-    <tr className={clsx('hover:bg-slate-50 transition-colors', className)} {...props}>
+    <tr
+      className={clsx('transition-colors hover:bg-amber-50', className)}
+      {...props}
+    >
       {children}
     </tr>
   );

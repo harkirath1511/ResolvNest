@@ -1,13 +1,12 @@
 import Link from 'next/link';
 import { requireRole } from '@/lib/session';
 import { listForStudent } from '@/lib/db/complaints';
-import { Card } from '@/components/ui/Card';
 import { StatusBadge } from '@/components/StatusBadge';
+import { EmptyState } from '@/components/EmptyState';
+import { Inbox, ArrowUpRight } from 'lucide-react';
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('en-IN', {
-    day: '2-digit', month: 'short', year: 'numeric',
-  });
+  return new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
 export default async function StudentComplaintsPage() {
@@ -16,41 +15,53 @@ export default async function StudentComplaintsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">My Complaints</h1>
-        <p className="text-slate-500 mt-1">{complaints.length} complaint{complaints.length !== 1 ? 's' : ''} raised</p>
+      <div className="animate-slide-up">
+        <p className="text-sm font-black uppercase tracking-widest mb-1" style={{ color: 'var(--muted)', fontFamily: 'var(--font-syne)' }}>My complaints</p>
+        <h1 className="text-3xl md:text-4xl font-black" style={{ fontFamily: 'var(--font-syne)' }}>
+          All Complaints
+        </h1>
+        <p className="text-sm font-medium mt-1" style={{ color: 'var(--muted)' }}>
+          {complaints.length} {complaints.length === 1 ? 'complaint' : 'complaints'} raised so far.
+        </p>
       </div>
 
-      <Card padding="none">
-        {complaints.length === 0 ? (
-          <div className="px-5 py-12 text-center text-slate-500 text-sm">
-            No complaints yet.{' '}
-            <Link href="/student/new" className="text-indigo-600 hover:underline">
-              Raise one now.
-            </Link>
-          </div>
-        ) : (
-          <ul className="divide-y divide-slate-100">
-            {complaints.map((c) => (
-              <li key={c.complaint_id}>
+      {complaints.length === 0 ? (
+        <EmptyState
+          Icon={Inbox}
+          title="No complaints yet"
+          description="When you raise a complaint, it'll show up here."
+          ctaLabel="Raise your first complaint"
+          ctaHref="/student/new"
+          accent="var(--yellow)"
+        />
+      ) : (
+        <div className="nb-card overflow-hidden p-0 animate-slide-up-1">
+          <ul>
+            {complaints.map((c, i) => (
+              <li key={c.complaint_id} style={{ borderBottom: i < complaints.length - 1 ? '2px solid #f3f4f6' : undefined }}>
                 <Link
                   href={`/student/complaints/${c.complaint_id}`}
-                  className="flex items-start justify-between gap-4 px-5 py-4 hover:bg-slate-50 transition-colors"
+                  className="flex items-start justify-between gap-4 px-5 py-4 hover:bg-amber-50 transition-colors group"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-slate-800">{c.description}</p>
-                    <p className="text-xs text-slate-500 mt-1">
-                      {c.category_name} · {formatDate(c.complaint_date)}
-                      {c.staff_name && ` · Assigned to ${c.staff_name}`}
-                    </p>
+                    <p className="text-sm font-bold truncate">{c.description}</p>
+                    <div className="flex items-center gap-2 mt-1 text-xs font-medium flex-wrap" style={{ color: 'var(--muted)' }}>
+                      <span className="font-bold" style={{ color: '#111' }}>{c.category_name}</span>
+                      <span>·</span>
+                      <span>{formatDate(c.complaint_date)}</span>
+                      {c.staff_name && (<><span>·</span><span>→ {c.staff_name}</span></>)}
+                    </div>
                   </div>
-                  <StatusBadge status={c.current_status} />
+                  <div className="flex items-center gap-2 shrink-0">
+                    <StatusBadge status={c.current_status} />
+                    <ArrowUpRight size={14} strokeWidth={2.5} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 hidden sm:block" />
+                  </div>
                 </Link>
               </li>
             ))}
           </ul>
-        )}
-      </Card>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { requireRole } from '@/lib/session';
 import { createHostel, deleteHostel } from '@/lib/db/hostels';
 import { createHostelSchema } from '@/lib/validation';
@@ -27,8 +28,8 @@ export async function deleteHostelAction(formData: FormData) {
   const id = Number(formData.get('hostel_id'));
   try {
     await deleteHostel(id);
-    return { error: null };
-  } catch (err) {
-    return { error: err instanceof Error ? err.message : 'Failed to delete hostel.' };
+    revalidatePath('/admin/hostels');
+  } catch {
+    // silently ignore
   }
 }
