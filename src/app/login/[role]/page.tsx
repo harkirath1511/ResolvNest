@@ -138,3 +138,7 @@ export default async function LoginPage({
     </main>
   );
 }
+
+export function generateStaticParams() {
+  return ['student', 'staff', 'admin'].map((role) => ({ role }));
+}
